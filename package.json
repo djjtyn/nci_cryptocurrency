@@ -1,0 +1,22 @@
+{
+  "name": "nci",
+  "version": "1.0.0",
+  "description": "college project",
+  "main": "contract.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/djjtyn/nci_cryptocurrency.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/djjtyn/nci_cryptocurrency/issues"
+  },
+  "homepage": "https://github.com/djjtyn/nci_cryptocurrency#readme",
+  "dependencies": {
+    "web3": "^1.6.0"
+  }
+}

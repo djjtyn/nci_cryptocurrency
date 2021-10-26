@@ -261,3 +261,24 @@ const abi = [
 		"type": "function"
 	}
 ]
+
+//Smart contract address
+const contractAddress = "0x49B87AdcD21B896e14C5FFA48F1dfc66799031b5";
+
+//Metamask account 
+const owner = "0x33Ba616Af0e3449850FA802f9E8E068641B12d97";
+
+const contract = new web3.eth.Contract(abi, contractAddress);
+console.log("Connected to contract on Ropsten");
+
+//RUn some methods from our contract
+const getTotalSupply = async() => {
+    let totalSupply = await contract.methods.totalSupply().call();
+    return `Total Supply is: ${totalSupply}`; 
+}
+
+const returnAllValues = async() => {
+    console.log(await getTotalSupply())
+}
+
+returnAllValues();

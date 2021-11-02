@@ -1,15 +1,17 @@
-const Web3 = require("web3")
+// web3 ethereum talker dependency
+const Web3 = require('web3')
 
-require('dotenv').config();
+// transaction crafting dependency
+const Tx = require('ethereumjs-tx').Transaction
 
+require('dotenv').config()
 
-infuraToken = process.env.INFURA_TOKEN;
-//Instantiate web3 with a remote procedure call
-const rpcURL = "https://ropsten.infura.io/v3/" + infuraToken;
-const web3 = new Web3(rpcURL);
-console.log("Connected to web3");
+infuraToken = process.env.INFURA_TOKEN
+contractAddress = process.env.CONTRACT_ADDRESS
+ownerAddress = process.env.OWNER_ADDRESS
+privateKey = Buffer.from(process.env.SUPER_SECRET_PRIVATE_KEY, 'hex')
 
-//Get the ABI (interface) for the contract
+// get the ABI (interface) for our contract
 const abi = [
 	{
 		"inputs": [],
@@ -148,7 +150,7 @@ const abi = [
 	},
 	{
 		"inputs": [],
-		"name": "decimels",
+		"name": "decimals",
 		"outputs": [
 			{
 				"internalType": "uint8",
@@ -266,42 +268,55 @@ const abi = [
 	}
 ]
 
-//Smart contract address
-const contractAddress = "0xEEeFD72113eA66385eEd6D409E246517E2b9060f";
+// instantiate web3 with the infura rpc url
+const web3 = new Web3("https://ropsten.infura.io/v3/" + infuraToken);
 
-//Metamask account 
-const owner = "0x33Ba616Af0e3449850FA802f9E8E068641B12d97";
+// specify our contract address 
+const address = contractAddress;
 
-//Instantiate a contract object 
-const contract = new web3.eth.Contract(abi, contractAddress);
-console.log("Connected to contract on Ropsten");
+// specify our owner address
+const owner = ownerAddress;
 
-//Run some methods from our contract
-const getTotalSupply = async() => {
-    let totalSupply = await contract.methods.totalSupply().call();
-    return `Total Supply is: ${totalSupply}`; 
+
+// connect to our contract
+const contract = new web3.eth.Contract(abi, address);
+
+// set up a send transaction method
+const sendTx = async(raw) => {
+    return await web3.eth.sendSignedTransaction(raw);
 }
 
-const getSymbol = async() => {
-    let symbol = await contract.methods.symbol().call();
-    return `Symbol is: ${symbol}`; 
+const transferToken = async(toAccount, amount) => {
+
+    // generate a nonce
+
+    let txCount = await web3.eth.getTransactionCount(owner);
+    console.log("tx count is " + txCount);
+
+    // generate tx data
+    const txObject = {
+        nonce: web3.utils.toHex(txCount),
+        gasLimit: web3.utils.toHex(500000),
+        gasPrice: web3.utils.toHex(web3.utils.toWei('100', 'gwei')),
+        to: contractAddress,
+        data: contract.methods.transfer(toAccount, amount).encodeABI()
+    }
+
+    const tx = new Tx(txObject, {chain: 'ropsten', hardfork: 'petersburg'})
+
+    // sign the tx
+    tx.sign(privateKey);
+
+    console.log("signed transaction with super secret private key");
+
+    // serialize the raw tx
+    const serializedTx = tx.serialize();
+    const raw = '0x' + serializedTx.toString('hex');
+
+    console.log('about to send transaction' + raw)
+    let txHash = await sendTx(raw);
+    console.log("transaction hash: " + txHash.transactionHash)
+    console.log("transaction in block: " + txHash.blockNumber)
 }
 
-const getBalanceOfOwner = async(owner) => {
-    let balance = await contract.methods.balanceOf(owner).call();
-    return `Balance of owner is: ${balance}`; 
-}
-
-const getDecimels = async() => {
-    let decimels = await contract.methods.decimels().call();
-    return `No of decimel places is: ${decimels}`; 
-}
-
-const returnAllValues = async() => {
-    console.log(await getTotalSupply());
-    console.log(await getSymbol());
-    console.log(await getBalanceOfOwner(owner));
-    console.log(await getDecimels());
-}
-
-returnAllValues();
+transferToken("0xE7A0bA0c657aaDfa6330C70d870B0D9FCF97d447", 500)

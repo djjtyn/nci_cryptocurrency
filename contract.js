@@ -1,13 +1,13 @@
 const Web3 = require("web3")
 
+//This depenedencies is needed to read .env file
 require('dotenv').config();
 
 
 infuraToken = process.env.INFURA_TOKEN;
-//Instantiate web3 with a remote procedure call
-const rpcURL = "https://ropsten.infura.io/v3/" + infuraToken;
-const web3 = new Web3(rpcURL);
-console.log("Connected to web3");
+contractAddress =  process.env.CONTRACT_ADDRESS;
+ownerAddress = process.env.OWNER_ADDRESS;
+privateKey = Buffer.from(process.env.SUPER_SECRET_PRIVATE_KEY, 'hex')
 
 //Get the ABI (interface) for the contract
 const abi = [
@@ -266,15 +266,21 @@ const abi = [
 	}
 ]
 
-//Smart contract address
-const contractAddress = "0xEEeFD72113eA66385eEd6D409E246517E2b9060f";
+//Instantiate web3 with a remote procedure call
+const rpcURL = "https://ropsten.infura.io/v3/" + infuraToken;
+const web3 = new Web3(rpcURL);
+console.log("Connected to web3");
 
-//Metamask account 
-const owner = "0x33Ba616Af0e3449850FA802f9E8E068641B12d97";
+
+
+const address = contractAddress;
+
 
 //Instantiate a contract object 
 const contract = new web3.eth.Contract(abi, contractAddress);
 console.log("Connected to contract on Ropsten");
+
+const owner = ownerAddress;
 
 //Run some methods from our contract
 const getTotalSupply = async() => {
@@ -282,26 +288,34 @@ const getTotalSupply = async() => {
     return `Total Supply is: ${totalSupply}`; 
 }
 
+const getName = async() => {
+	let name = await contract.methods.name().call();
+	return "Name: " + name;
+}
+
 const getSymbol = async() => {
     let symbol = await contract.methods.symbol().call();
-    return `Symbol is: ${symbol}`; 
+    return symbol; 
 }
 
 const getBalanceOfOwner = async(owner) => {
     let balance = await contract.methods.balanceOf(owner).call();
-    return `Balance of owner is: ${balance}`; 
+    return balance; 
 }
 
-const getDecimels = async() => {
-    let decimels = await contract.methods.decimels().call();
+const getDecimals = async() => {
+    let decimels = await contract.methods.decimals().call();
     return `No of decimel places is: ${decimels}`; 
 }
 
 const returnAllValues = async() => {
     console.log(await getTotalSupply());
+	console.log(await getName());
     console.log(await getSymbol());
     console.log(await getBalanceOfOwner(owner));
-    console.log(await getDecimels());
+    console.log(await getDecimals());
 }
 
-returnAllValues();
+//returnAllValues();
+
+module.exports = {getSymbol, getBalanceOfOwner, getName}

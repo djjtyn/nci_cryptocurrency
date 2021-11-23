@@ -289,7 +289,6 @@ const sendTx = async(raw) => {
 const transferToken = async(toAccount, amount) => {
 
     // generate a nonce
-
     let txCount = await web3.eth.getTransactionCount(owner);
     console.log("tx count is " + txCount);
 
@@ -298,10 +297,15 @@ const transferToken = async(toAccount, amount) => {
         nonce: web3.utils.toHex(txCount),
         gasLimit: web3.utils.toHex(500000),
         gasPrice: web3.utils.toHex(web3.utils.toWei('100', 'gwei')),
-        to: contractAddress,
+        to: toAccount,
         data: contract.methods.transfer(toAccount, amount).encodeABI()
+        /*
+        ***TO SEND ETHER***
+        value: web3.utils.toHex(web3.utils.toWei(amount, 'ther'))
+        */
     }
 
+	// assign a chain id
     const tx = new Tx(txObject, {chain: 'ropsten', hardfork: 'petersburg'})
 
     // sign the tx
@@ -319,4 +323,6 @@ const transferToken = async(toAccount, amount) => {
     console.log("transaction in block: " + txHash.blockNumber)
 }
 
-transferToken("0xE7A0bA0c657aaDfa6330C70d870B0D9FCF97d447", 500)
+//transferToken("0xE7A0bA0c657aaDfa6330C70d870B0D9FCF97d447", 500)
+
+module.exports = {transferToken}

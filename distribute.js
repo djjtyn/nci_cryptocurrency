@@ -13,7 +13,7 @@ ownerAddress = process.env.OWNER_ADDRESS;
 privateKey = Buffer.from(process.env.SUPER_SECRET_PRIVATE_KEY, 'hex')
 
 const distribute = async() => {
-    // read the accounts.txt file
+    // read the accounts.txt file and put into array
     let distributionAddresses = fs.readFileSync('accounts.txt', 'utf8').split('\r\n');
 
     // get the balance of the owner
@@ -41,7 +41,3 @@ const distribute = async() => {
 }
 
 distribute();
-
-//builtinModules.export = {distribute}
-
-//put the N accounts into an array

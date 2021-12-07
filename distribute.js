@@ -5,6 +5,7 @@ let bigNumber = require("big-number")
 let method = require('./method.js')
 let contract = require('./contract.js');
 const BigNumber = require("big-number/big-number");
+const { Console } = require("console");
 
 require('dotenv').config();
 infuraToken = process.env.INFURA_TOKEN;
@@ -33,10 +34,15 @@ const distribute = async() => {
     let tokenSymbol = await contract.getSymbol();
 
     // loop through the addresses in distributionAddresses array
-    for(i = 0;i<distributionAddresses.length;i++) {
-        console.log(`About to distribute ${distributionAmount}  ${tokenSymbol} to address ${distributionAddresses[i]}`)
-        // Transfer token amount
-        let returnValue = await method.transferToken(distributionAddresses[i], distributionAmount);
+    try{
+        for(i = 0;i<distributionAddresses.length;i++) {
+            console.log(`About to distribute ${distributionAmount}  ${tokenSymbol} to address ${distributionAddresses[i]}`)
+            // Transfer token amount
+            let returnValue = await method.transferToken(distributionAddresses[i], distributionAmount);
+        }
+        console.log(`Sent ${distributionAmount} DTK to ${distributionAddresses.length} addresses sucessfully`)
+    } catch (err) {
+        console.log("There was an issue distributing the transactions");
     }
 }
 

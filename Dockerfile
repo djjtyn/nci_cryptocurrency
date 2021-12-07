@@ -10,5 +10,5 @@ COPY  . .
 
 EXPOSE 8080
 
-CMD ["node", distribute.js]
+CMD ["node", "distribute.js"]
 

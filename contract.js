@@ -347,6 +347,4 @@ const returnAllValues = async() => {
     console.log(await getDecimals());
 }
 
-returnAllValues();
-
 module.exports = {getSymbol, getBalanceOfOwner, getName}

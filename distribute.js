@@ -46,4 +46,4 @@ const distribute = async() => {
     }
 }
 
-distribute();
+module.exports = { distribute }

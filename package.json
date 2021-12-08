@@ -21,8 +21,10 @@
     "curl": "^0.1.4",
     "dotenv": "^10.0.0",
     "ethereumjs-tx": "^2.1.2",
+    "ethereumjs-wallet": "^1.0.2",
     "express": "^4.17.1",
     "fs": "0.0.1-security",
+    "keccak256": "^1.0.3",
     "web3": "^1.6.0"
   }
 }

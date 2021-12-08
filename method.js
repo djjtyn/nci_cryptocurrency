@@ -323,6 +323,4 @@ const transferToken = async(toAccount, amount) => {
     console.log("transaction in block: " + txHash.blockNumber)
 }
 
-//transferToken("0xE7A0bA0c657aaDfa6330C70d870B0D9FCF97d447", 500)
-
 module.exports = {transferToken}

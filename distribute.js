@@ -33,17 +33,17 @@ const distribute = async() => {
     // Get the token symbol
     let tokenSymbol = await contract.getSymbol();
 
-    // loop through the addresses in distributionAddresses array
-    try{
-        for(i = 0;i<distributionAddresses.length;i++) {
-            console.log(`About to distribute ${distributionAmount}  ${tokenSymbol} to address ${distributionAddresses[i]}`)
-            // Transfer token amount
-            let returnValue = await method.transferToken(distributionAddresses[i], distributionAmount);
-        }
-        console.log(`Sent ${distributionAmount} DTK to ${distributionAddresses.length} addresses sucessfully`)
-    } catch (err) {
-        console.log("There was an issue distributing the transactions");
-    }
+    // // loop through the addresses in distributionAddresses array
+    // try{
+    //     for(i = 0;i<distributionAddresses.length;i++) {
+    //         console.log(`About to distribute ${distributionAmount}  ${tokenSymbol} to address ${distributionAddresses[i]}`)
+    //         // Transfer token amount
+    //         let returnValue = await method.transferToken(distributionAddresses[i], distributionAmount);
+    //     }
+    //     console.log(`Sent ${distributionAmount} DTK to ${distributionAddresses.length} addresses sucessfully`)
+    // } catch (err) {
+    //     console.log("There was an issue distributing the transactions");
+    // }
 }
 
 distribute();

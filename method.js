@@ -318,7 +318,7 @@ const transferToken = async(toAccount, amount) => {
     const raw = '0x' + serializedTx.toString('hex');
 
     console.log('about to send transaction' + raw)
-    let txHash = await sendTx(raw);
+    let txResponse = await sendTx(raw);
     console.log("transaction hash: " + txHash.transactionHash)
     console.log("transaction in block: " + txHash.blockNumber)
 }
